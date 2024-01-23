@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::post('v1', function () {
+    return response()->json(['message' => 'Post request successful']);
 });
+
+Route::post('/v1/register',[UserAuthController::class,'register']);
+Route::post('login',[UserAuthController::class,'login']);
+Route::post('logout',[UserAuthController::class,'logout'])
+  ->middleware('auth:sanctum');

@@ -2,6 +2,7 @@
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 import AddNewUserDrawer from '@/views/apps/user/list/AddNewUserDrawer.vue'
 import { paginationMeta } from '@api-utils/paginationMeta'
+import { reactive } from 'vue'
 
 // 👉 Store
 const searchQuery = ref('')
@@ -262,85 +263,169 @@ const widgetData = ref([
     ],
   },
 ])
+
+const donutChartColors = {
+  donut: {
+    series1: '#22A95E',
+    series2: '#24B364',
+    series3: '#56CA00',
+    series4: '#53D28C',
+    series5: '#7EDDA9',
+    series6: '#A9E9C5',
+  },
+}
+
+const statisticA = ref([
+  {
+    text: "xxx",
+    value: 10000,
+  },
+  {
+    text: "xxx",
+    value: 10000,
+  },
+  {
+    text: "xxx",
+    value: 10000,
+  },
+])
+
+const statisticB = ref([
+  {
+    text: "xxx",
+    value: 10000,
+  },
+  {
+    text: "xxx",
+    value: 10000,
+  },
+  {
+    text: "xxx",
+    value: 10000,
+  },
+])
 </script>
 
 <template>
   <section>
-    <!-- 👉 Widgets -->
-    <div class="d-flex mb-6">
-      <VRow>
-        <template
-          v-for="(data, id) in widgetData"
-          :key="id"
-        >
+    <VRow class="py-6">
+      <!-- 👉 Welcome -->
+      <VCol
+        cols="12"
+        md="6"
+        :class="$vuetify.display.mdAndUp ? 'border-e' : 'border-b'"
+      >
+        <div class="pe-3">
+          <h3 class="text-h3 text-high-emphasis mb-1 mb-4">
+            ภาพรวมพนักงาน
+          </h3>
+
+          <div class="d-flex justify-space-between flex-wrap gap-4 flex-column flex-md-row">
+            <div
+              v-for="{ title, value, icon, color } in [
+                { title: 'ผู้ชาย', value: '20', icon: 'tabler-man', color: 'man' },
+                { title: 'ผู้หญิง', value: '50', icon: 'tabler-woman', color: 'woman' },
+                { title: 'รวม', value: '14', icon: 'tabler-friends', color: 'all' },
+              ]"
+              :key="title"
+            >
+              <div class="d-flex">
+                <VAvatar
+                  variant="tonal"
+                  :color="color"
+                  rounded
+                  size="54"
+                  class="text-primary me-4"
+                >
+                  <VIcon
+                    :icon="icon"
+                    size="38"
+                  />
+                </VAvatar>
+                <div>
+                  <span class="text-base">{{ title }}</span>
+                  <h4
+                    class="text-h4 font-weight-medium"
+                    :class="`text-${color}`"
+                  >
+                    {{ value }}
+                  </h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </VCol>
+
+      
+      <VCol
+        cols="12"
+        md="6"
+      >
+        <h5 class="text-h5 text-high-emphasis mb-2 text-no-wrap px-2">
+          สถิติพนักงาน
+        </h5>
+        <VRow>
           <VCol
             cols="12"
-            md="3"
-            sm="6"
+            md="6"
+            :class="$vuetify.display.mdAndUp ?? 'border-e'"
           >
-            <VCard v-if="'children' in data">
-              <VCardText>
-                <div class="d-flex justify-space-between">
-                  <div class="d-flex flex-column gap-y-1">
-                    <div>
-                      <h4 class="text-h4 pb-5">
-                        {{ data.title }}
-                      </h4>
-                      <h4
-                        v-for="(row, i) in data.children"
-                        :key="row"
-                        class="text-body-1 text-medium-emphasis text-h6"
-                      >{{ row.text }} - {{ row.value }}</h4>
-                    </div>
-                  </div>
-                  <VAvatar
-                    :color="data.iconColor"
-                    variant="tonal"
-                    rounded
-                    size="38"
+            <div class="align-center">
+              <div class="d-flex flex-column ps-3">
+                <span class="mb-7">ระดับชั้นพนักงาน</span>
+                
+                <VRow
+                  v-for="item in statisticA"
+                  :key="item"
+                >
+                  <VCol
+                    cols="6" 
+                    class="py-0"
                   >
-                    <VIcon
-                      :icon="data.icon"
-                      size="26"
-                    />
-                  </VAvatar>
-                </div>
-              </VCardText>
-            </VCard>
-            <VCard v-else>
-              <VCardText>
-                <div class="d-flex justify-space-between">
-                  <div class="d-flex flex-column gap-y-1">
-                    <span class="text-body-1 text-medium-emphasis">{{ data.title }}</span>
-                    <div>
-                      <h4 class="text-h4">
-                        {{ data.value }}
-                        <span
-                          class="text-base "
-                          :class="data.change > 0 ? 'text-success' : 'text-error'"
-                        >({{ prefixWithPlus(data.change) }}%)</span>
-                      </h4>
-                    </div>
-                    <span class="text-sm">{{ data.desc }}</span>
-                  </div>
-                  <VAvatar
-                    :color="data.iconColor"
-                    variant="tonal"
-                    rounded
-                    size="38"
+                    {{ item.text }}
+                  </VCol>
+                  <VCol
+                    cols="6" 
+                    class="py-0"
                   >
-                    <VIcon
-                      :icon="data.icon"
-                      size="26"
-                    />
-                  </VAvatar>
-                </div>
-              </VCardText>
-            </VCard>
+                    {{ item.value }}
+                  </VCol>
+                </VRow>
+              </div>
+            </div>
           </VCol>
-        </template>
-      </VRow>
-    </div>
+          <VCol
+            cols="12"
+            md="6"
+          >
+            <div class="d-flex justify-space-between align-center">
+              <div class="d-flex flex-column ps-3">
+                <span class="mb-7">ฝ่ายต่างๆ</span>
+                <VRow
+                  v-for="item in statisticA"
+                  :key="item"
+                >
+                  <VCol
+                    cols="6" 
+                    class="py-0"
+                  >
+                    {{ item.text }}
+                  </VCol>
+                  <VCol
+                    cols="6" 
+                    class="py-0"
+                  >
+                    {{ item.value }}
+                  </VCol>
+                </VRow>
+              </div>
+            </div>
+          </VCol>
+        </VRow>
+      </VCol>
+    </VRow>
+
 
     <VCard>
       <VCardText class="d-flex flex-wrap py-4 gap-4">

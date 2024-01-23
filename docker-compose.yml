@@ -1,5 +1,5 @@
 services:
-    laravel.test:
+    laravel:
         build:
             context: ./vendor/laravel/sail/runtimes/8.2
             dockerfile: Dockerfile
@@ -78,6 +78,17 @@ services:
         ports:
             - '${FORWARD_MAILPIT_PORT:-1025}:1025'
             - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: mysql
+            MYSQL_ROOT_PASSWORD: admin123
+        ports:
+            - 8081:80
         networks:
             - sail
 networks:
