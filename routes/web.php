@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +15,25 @@ use App\Http\Controllers\UserAuthController;
 |
 */
 
-Route::post('v1', function () {
-    return response()->json(['message' => 'Post request successful']);
+Route::middleware(['v1'])->group(function () {
+  Route::post('/', function () {
+      return response()->json(['message' => 'Post request successful']);
+  });
+  Route::post('/register',[UserAuthController::class,'register']);
+  Route::post('/login',[UserAuthController::class,'login']);
+  Route::post('/logout',[UserAuthController::class,'logout'])
+    ->middleware('auth:sanctum');
+
+  Route::middleware(['employee'])->group(function () {
+    Route::get('/', [EmployeeController::class, 'index']);
+    Route::post('/', [EmployeeController::class, 'create']);
+    Route::get('/{employee}', [EmployeeController::class, 'show']);
+    Route::put('/{employee}', [EmployeeController::class, 'edit']);
+    Route::delete('/{employee}', [EmployeeController::class, 'destroy']);
+  });
 });
-Route::post('v1/register',[UserAuthController::class,'register']);
-Route::post('v1/login',[UserAuthController::class,'login']);
-Route::post('v1/logout',[UserAuthController::class,'logout'])
-  ->middleware('auth:sanctum');
+
+
 
 
 Route::get('{any?}', function() {

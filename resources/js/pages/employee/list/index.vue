@@ -176,22 +176,22 @@ const resolveUserStatusVariant = stat => {
 
 const isAddNewUserDrawerVisible = ref(false)
 
-const addNewUser = async userData => {
-  await $api('/apps/users', {
-    method: 'POST',
-    body: userData,
-  })
+// const addNewUser = async userData => {
+//   await $api('/apps/users', {
+//     method: 'POST',
+//     body: userData,
+//   })
 
-  // refetch User
-  fetchUsers()
-}
+//   // refetch User
+//   fetchUsers()
+// }
 
-const deleteUser = async id => {
-  await $api(`/apps/users/${ id }`, { method: 'DELETE' })
+// const deleteUser = async id => {
+//   await $api(`/apps/users/${ id }`, { method: 'DELETE' })
 
-  // refetch User
-  fetchUsers()
-}
+//   // refetch User
+//   fetchUsers()
+// }
 
 const widgetData = ref([
   {
