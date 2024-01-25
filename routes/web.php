@@ -15,8 +15,8 @@ use App\Http\Controllers\EmployeeController;
 |
 */
 
-Route::middleware(['v1'])->group(function () {
-  Route::post('/', function () {
+Route::group(['prefix'=>'v1'], function(){
+  Route::get('/', function () {
       return response()->json(['message' => 'Post request successful']);
   });
   Route::post('/register',[UserAuthController::class,'register']);
@@ -24,7 +24,7 @@ Route::middleware(['v1'])->group(function () {
   Route::post('/logout',[UserAuthController::class,'logout'])
     ->middleware('auth:sanctum');
 
-  Route::middleware(['employee'])->group(function () {
+  Route::group(['prefix'=>'employee'], function(){
     Route::get('/', [EmployeeController::class, 'index']);
     Route::post('/', [EmployeeController::class, 'create']);
     Route::get('/{employee}', [EmployeeController::class, 'show']);
@@ -32,9 +32,6 @@ Route::middleware(['v1'])->group(function () {
     Route::delete('/{employee}', [EmployeeController::class, 'destroy']);
   });
 });
-
-
-
 
 Route::get('{any?}', function() {
     return view('application');
