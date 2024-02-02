@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,10 @@ Route::group(['prefix'=>'v1'], function(){
   Route::post('/login',[UserAuthController::class,'login']);
   Route::post('/logout',[UserAuthController::class,'logout'])
     ->middleware('auth:sanctum');
+
+  Route::group(['prefix'=>'user'], function(){
+    Route::get('/', [UserController::class, 'index']);
+  });
 
   Route::group(['prefix'=>'employee'], function(){
     Route::get('/', [EmployeeController::class, 'index']);

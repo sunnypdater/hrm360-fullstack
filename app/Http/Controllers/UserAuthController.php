@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -35,8 +36,11 @@ class UserAuthController extends Controller
                 'message' => 'Invalid Credentials'
             ],401);
         }
+        $user->last_login = Carbon::now()->toDateTimeString();
+        $user->save();
         $token = $user->createToken($user->name.'-AuthToken')->plainTextToken;
         return response()->json([
+            'email' => $user->email,
             'access_token' => $token,
         ]);
     }

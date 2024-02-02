@@ -19,4 +19,9 @@ class Employee extends Model
         'role',
         'department',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('users');
+    }
 }

@@ -37,11 +37,11 @@ const headers = [
   },
   {
     title: 'Created',
-    key: 'created-at',
+    key: 'created_at',
   },
   {
     title: 'Last Signin',
-    key: 'last-sign',
+    key: 'last_login',
   },
   {
     title: 'Actions',
@@ -50,24 +50,10 @@ const headers = [
   },
 ]
 
-const {
-  data: usersData,
-  execute: fetchUsers,
-} = await useApi(createUrl('/apps/users', {
-  query: {
-    q: searchQuery,
-    status: selectedStatus,
-    plan: selectedPlan,
-    role: selectedRole,
-    itemsPerPage,
-    page,
-    sortBy,
-    orderBy,
-  },
-}))
+const { data } = await useApi(createUrl('http://localhost:8000/v1/user'))
 
-const users = []
-const totalUsers = 0
+const users = data.value.data
+const totalUsers = users.length
 
 // 👉 search filters
 const roles = [
@@ -226,6 +212,10 @@ const widgetData = ref([
     iconColor: 'warning',
   },
 ])
+
+const toDateTime = datetime => {
+  return new Date(datetime).toLocaleString()
+} 
 </script>
 
 <template>
@@ -310,38 +300,18 @@ const widgetData = ref([
           </div>
         </template>
 
-        <!-- 👉 Role -->
-        <template #item.role="{ item }">
+        <!-- 👉 Created At -->
+        <template #item.created_at="{ item }">
           <div class="d-flex align-center gap-4">
-            <VAvatar
-              :size="30"
-              :color="resolveUserRoleVariant(item.role).color"
-              variant="tonal"
-            >
-              <VIcon
-                :size="20"
-                :icon="resolveUserRoleVariant(item.role).icon"
-              />
-            </VAvatar>
-            <span class="text-capitalize">{{ item.role }}</span>
+            <span class="text-capitalize">{{ toDateTime(item.created_at) }}</span>
           </div>
         </template>
 
-        <!-- Plan -->
-        <template #item.plan="{ item }">
-          <span class="text-capitalize font-weight-medium">{{ item.currentPlan }}</span>
-        </template>
-
-        <!-- Status -->
-        <template #item.status="{ item }">
-          <VChip
-            :color="resolveUserStatusVariant(item.status)"
-            size="small"
-            label
-            class="text-capitalize"
-          >
-            {{ item.status }}
-          </VChip>
+        <!-- 👉 Last Signin -->
+        <template #item.last_login="{ item }">
+          <div class="d-flex align-center gap-4">
+            <span class="text-capitalize">{{ toDateTime(item.last_login) }}</span>
+          </div>
         </template>
 
         <!-- Actions -->

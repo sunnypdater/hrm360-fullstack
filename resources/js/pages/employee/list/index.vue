@@ -26,23 +26,23 @@ const updateOptions = options => {
 const headers = [
   {
     title: 'รหัสพนักงาน',
-    key: 'user',
+    key: 'id',
   },
   {
     title: 'ตำแหน่งงาน',
-    key: 'role',
+    key: 'position',
   },
   {
     title: 'แผนงาน',
-    key: 'plan',
+    key: 'department',
   },
   {
     title: 'ชื่อ - นามสกุล',
-    key: 'billing',
+    key: 'firstname',
   },
   {
     title: 'กลุ่มผู้ใช้งาน',
-    key: 'status',
+    key: 'role',
   },
   {
     title: 'Actions',
@@ -51,24 +51,13 @@ const headers = [
   },
 ]
 
-const {
-  data: usersData,
-  execute: fetchUsers,
-} = await useApi(createUrl('/apps/users', {
-  query: {
-    q: searchQuery,
-    status: selectedStatus,
-    plan: selectedPlan,
-    role: selectedRole,
-    itemsPerPage,
-    page,
-    sortBy,
-    orderBy,
-  },
-}))
+const { data } = await useApi(`http://localhost:8000/v1/employee`)
 
-const users = []
-const totalUsers = 0
+const users = data.value.data
+
+console.log("user : ", users)
+
+const totalUsers = users.length
 
 // 👉 search filters
 const roles = [
@@ -162,36 +151,31 @@ const resolveUserRoleVariant = role => {
   }
 }
 
-const resolveUserStatusVariant = stat => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'pending')
-    return 'warning'
-  if (statLowerCase === 'active')
-    return 'success'
-  if (statLowerCase === 'inactive')
-    return 'secondary'
+// const resolveUserStatusVariant = stat => {
+//   const statLowerCase = stat.toLowerCase()
+//   if (statLowerCase === 'pending')
+//     return 'warning'
+//   if (statLowerCase === 'active')
+//     return 'success'
+//   if (statLowerCase === 'inactive')
+//     return 'secondary'
   
-  return 'primary'
-}
+//   return 'primary'
+// }
 
 const isAddNewUserDrawerVisible = ref(false)
 
-// const addNewUser = async userData => {
-//   await $api('/apps/users', {
-//     method: 'POST',
-//     body: userData,
-//   })
+const addNewUser = async employeeData => {
+  console.log('employeeData:', employeeData)
 
-//   // refetch User
-//   fetchUsers()
-// }
+  await $api('http://localhost:8000/v1/employee', {
+    method: 'POST',
+    body: employeeData,
+  })
 
-// const deleteUser = async id => {
-//   await $api(`/apps/users/${ id }`, { method: 'DELETE' })
+  location.reload()
 
-//   // refetch User
-//   fetchUsers()
-// }
+}
 
 const widgetData = ref([
   {
@@ -532,6 +516,14 @@ const statisticB = ref([
           </div>
         </template>
 
+        <!-- 👉 Name -->
+        <template #item.firstname="{ item }">
+          <div class="d-flex align-center gap-4">
+            <span class="text-capitalize">{{ item.firstname }} {{
+              item.lastname }}</span>
+          </div>
+        </template>
+
         <!-- Plan -->
         <template #item.plan="{ item }">
           <span class="text-capitalize font-weight-medium">{{ item.currentPlan }}</span>
@@ -540,7 +532,6 @@ const statisticB = ref([
         <!-- Status -->
         <template #item.status="{ item }">
           <VChip
-            :color="resolveUserStatusVariant(item.status)"
             size="small"
             label
             class="text-capitalize"

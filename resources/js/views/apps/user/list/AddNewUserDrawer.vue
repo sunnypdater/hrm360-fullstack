@@ -15,15 +15,14 @@ const emit = defineEmits([
 
 const isFormValid = ref(false)
 const refForm = ref()
-const fullName = ref('')
-const userName = ref('')
+const firstName = ref('')
+const lastName = ref('')
 const email = ref('')
-const company = ref('')
-const country = ref()
-const contact = ref('')
-const role = ref()
-const plan = ref()
-const status = ref()
+const gender = ref('')
+const level = ref('')
+const position = ref('')
+const department = ref('')
+const role = ref('')
 
 // 👉 drawer close
 const closeNavigationDrawer = () => {
@@ -38,17 +37,14 @@ const onSubmit = () => {
   refForm.value?.validate().then(({ valid }) => {
     if (valid) {
       emit('userData', {
-        id: 0,
-        fullName: fullName.value,
-        company: company.value,
-        role: role.value,
-        country: country.value,
-        contact: contact.value,
+        firstname: firstName.value,
+        lastname: lastName.value,
         email: email.value,
-        currentPlan: plan.value,
-        status: status.value,
-        avatar: '',
-        billing: 'Auto Debit',
+        gender: gender.value,
+        level: level.value,
+        position: position.value,
+        department: department.value,
+        role: role.value,
       })
       emit('update:isDrawerOpen', false)
       nextTick(() => {
@@ -89,23 +85,23 @@ const handleDrawerModelValueUpdate = val => {
             @submit.prevent="onSubmit"
           >
             <VRow>
-              <!-- 👉 Full name -->
+              <!-- 👉 First name -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="fullName"
+                  v-model="firstName"
                   :rules="[requiredValidator]"
-                  label="Full Name"
+                  label="First Name"
                   placeholder="John Doe"
                 />
               </VCol>
 
-              <!-- 👉 Username -->
+              <!-- 👉 Last name -->
               <VCol cols="12">
                 <AppTextField
-                  v-model="userName"
+                  v-model="lastName"
                   :rules="[requiredValidator]"
-                  label="Username"
-                  placeholder="Johndoe"
+                  label="Last Name"
+                  placeholder="John Doe"
                 />
               </VCol>
 
@@ -119,35 +115,50 @@ const handleDrawerModelValueUpdate = val => {
                 />
               </VCol>
 
-              <!-- 👉 company -->
-              <VCol cols="12">
-                <AppTextField
-                  v-model="company"
-                  :rules="[requiredValidator]"
-                  label="Company"
-                  placeholder="PixInvent"
-                />
-              </VCol>
-
-              <!-- 👉 Country -->
+              <!-- 👉 Gender -->
               <VCol cols="12">
                 <AppSelect
-                  v-model="country"
-                  label="Select Country"
-                  placeholder="Select Country"
+                  v-model="gender"
+                  label="Select Gender"
+                  placeholder="Select Gender"
                   :rules="[requiredValidator]"
-                  :items="['USA', 'UK', 'India', 'Australia']"
+                  :items="[
+                    { title: 'Male', value: 'male' },
+                    { title: 'Female', value: 'female' },
+                  ]"
                 />
               </VCol>
 
-              <!-- 👉 Contact -->
+              <!-- 👉 Level -->
               <VCol cols="12">
-                <AppTextField
-                  v-model="contact"
-                  type="number"
+                <AppSelect
+                  v-model="level"
+                  label="Select Level"
+                  placeholder="Select Level"
                   :rules="[requiredValidator]"
-                  label="Contact"
-                  placeholder="+1-541-754-3010"
+                  :items="['Chef', 'Manager', 'Staff']"
+                />
+              </VCol>
+
+              <!-- 👉 Position -->
+              <VCol cols="12">
+                <AppSelect
+                  v-model="position"
+                  label="Select Position"
+                  placeholder="Select Position"
+                  :rules="[requiredValidator]"
+                  :items="['Sale', 'HR', 'Staff']"
+                />
+              </VCol>
+                
+              <!-- 👉 Department -->
+              <VCol cols="12">
+                <AppSelect
+                  v-model="department"
+                  label="Select Department"
+                  placeholder="Select Department"
+                  :rules="[requiredValidator]"
+                  :items="['Sale', 'Accounting', 'Operation']"
                 />
               </VCol>
 
@@ -159,28 +170,6 @@ const handleDrawerModelValueUpdate = val => {
                   placeholder="Select Role"
                   :rules="[requiredValidator]"
                   :items="['Admin', 'Author', 'Editor', 'Maintainer', 'Subscriber']"
-                />
-              </VCol>
-
-              <!-- 👉 Plan -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="plan"
-                  label="Select Plan"
-                  placeholder="Select Plan"
-                  :rules="[requiredValidator]"
-                  :items="['Basic', 'Company', 'Enterprise', 'Team']"
-                />
-              </VCol>
-
-              <!-- 👉 Status -->
-              <VCol cols="12">
-                <AppSelect
-                  v-model="status"
-                  label="Select Status"
-                  placeholder="Select Status"
-                  :rules="[requiredValidator]"
-                  :items="[{ title: 'Active', value: 'active' }, { title: 'Inactive', value: 'inactive' }, { title: 'Pending', value: 'pending' }]"
                 />
               </VCol>
 
